@@ -107,7 +107,9 @@ module ActiveScaffold
       def action_link_authorized?(link, *args)
         security_method = link.security_method_set? || controller.respond_to?(link.security_method)
         authorized = if security_method
-          controller.send(link.security_method, *args)
+          # Why are we passing in the args? _authorized? methods are not expecting it
+          # controller.send(link.security_method, *args)
+          controller.send(link.security_method)
         else
           args.empty? ? true : args.first.authorized_for?(:crud_type => link.crud_type, :action => link.action)
         end
